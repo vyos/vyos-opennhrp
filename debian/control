@@ -1,4 +1,4 @@
-Source: opennhrp
+Source: vyos-opennhrp
 Section: unknown
 Priority: extra
 Maintainer: Mark Bryars <debian@darkskiez.co.uk>
@@ -8,7 +8,7 @@ Homepage: http://sourceforge.net/projects/opennhrp/
 #Vcs-Git: git://git.debian.org/collab-maint/opennhrp.git
 #Vcs-Browser: http://git.debian.org/?p=collab-maint/opennhrp.git;a=summary
 
-Package: opennhrp
+Package: vyos-opennhrp
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: <insert up to 60 chars description>
