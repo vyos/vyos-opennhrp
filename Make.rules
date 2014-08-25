@@ -3,7 +3,7 @@
 
 all: compile
 
-ifndef build
+ifndef srcbuild
 
 toplevelrun:=yes
 
@@ -78,7 +78,7 @@ LDFLAGS_ALL	+= $(LDFLAGS)
 
 export CC LD INSTALL INSTALLDIR CFLAGS_ALL LDFLAGS_ALL
 
-build		:=
+srcbuild		:=
 
 endif
 
@@ -91,15 +91,15 @@ endif
 src		:=
 obj		:=
 
-src		+= $(build)
-obj		:= $(build)
+src		+= $(srcbuild)
+obj		:= $(srcbuild)
 
 ##
 # Include directory specific stuff
 
-ifneq ($(build),)
-$(build)/Makefile: ;
-include $(build)/Makefile
+ifneq ($(srcbuild),)
+$(srcbuild)/Makefile: ;
+include $(srcbuild)/Makefile
 endif
 
 ##
@@ -243,7 +243,7 @@ endif
 # Top level rules.
 
 %/: FORCE
-	$(Q)$(MAKE) -f Make.rules build=$(build-dir) $(MAKECMDGOALS)
+	$(Q)$(MAKE) -f Make.rules srcbuild=$(build-dir) $(MAKECMDGOALS)
 
 compile: $(targets)
 	@:
