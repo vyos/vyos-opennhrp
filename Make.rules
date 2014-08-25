@@ -97,9 +97,13 @@ obj		:= $(build)
 ##
 # Include directory specific stuff
 
+ifeq (,$(wildcard Makefile))
+include Makefile
+else
 ifneq ($(build),)
 $(build)/Makefile: ;
 include $(build)/Makefile
+endif
 endif
 
 ##
