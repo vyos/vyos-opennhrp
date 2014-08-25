@@ -78,7 +78,7 @@ LDFLAGS_ALL	+= $(LDFLAGS)
 
 export CC LD INSTALL INSTALLDIR CFLAGS_ALL LDFLAGS_ALL
 
-build		:= $(pwd)
+build		:=
 
 endif
 
