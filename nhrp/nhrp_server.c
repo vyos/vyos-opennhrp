@@ -100,7 +100,7 @@ static int nhrp_handle_resolution_request(struct nhrp_packet *packet)
 	struct nhrp_peer_selector sel;
 	struct nhrp_cie *cie;
 
-	nhrp_info("Received Resolution Request from proto src %s to %s",
+	nhrp_debug("Received Resolution Request from proto src %s to %s",
 		  nhrp_address_format(&packet->src_protocol_address,
 				      sizeof(tmp), tmp),
 		  nhrp_address_format(&packet->dst_protocol_address,
@@ -153,7 +153,7 @@ static int nhrp_handle_resolution_request(struct nhrp_packet *packet)
 	cie->nbma_address = peer->my_nbma_address;
 	cie->protocol_address = packet->dst_iface->protocol_address;
 
-	nhrp_info("Sending Resolution Reply %s/%d is-at %s (holdtime %d)",
+	nhrp_debug("Sending Resolution Reply %s/%d is-at %s (holdtime %d)",
 		  nhrp_address_format(&packet->dst_protocol_address,
 				      sizeof(tmp), tmp),
 		  cie->hdr.prefix_length,
@@ -204,7 +204,7 @@ static void nhrp_server_finish_reg(struct nhrp_pending_request *pr)
 
 	if (pr->rpeer != NULL &&
 	    nhrp_packet_reroute(packet, pr->rpeer)) {
-		nhrp_info("Sending Registration Reply from proto src %s to %s (%d bindings accepted, %d rejected)",
+		nhrp_debug("Sending Registration Reply from proto src %s to %s (%d bindings accepted, %d rejected)",
 			  nhrp_address_format(&packet->dst_protocol_address,
 					      sizeof(tmp), tmp),
 			  nhrp_address_format(&packet->src_protocol_address,
@@ -215,7 +215,7 @@ static void nhrp_server_finish_reg(struct nhrp_pending_request *pr)
 	} else {
 		/* We could not create route peer entry (likely out of memory),
 		 * so we can't do much more here. */
-		nhrp_info("Dropping Registration Reply from proto src %s to %s",
+		nhrp_debug("Dropping Registration Reply from proto src %s to %s",
 			  nhrp_address_format(&packet->dst_protocol_address,
 					      sizeof(tmp), tmp),
 			  nhrp_address_format(&packet->src_protocol_address,
@@ -362,14 +362,14 @@ static int nhrp_handle_registration_request(struct nhrp_packet *packet)
 	struct nhrp_pending_request *pr;
 	int natted = 0;
 
-	nhrp_info("Received Registration Request from proto src %s to %s",
+	nhrp_debug("Received Registration Request from proto src %s to %s",
 		  nhrp_address_format(&packet->src_protocol_address,
 				      sizeof(tmp), tmp),
 		  nhrp_address_format(&packet->dst_protocol_address,
 				      sizeof(tmp2), tmp2));
 
 	if (nhrp_server_request_pending(packet)) {
-		nhrp_info("Already processing: resent packet ignored.");
+		nhrp_debug("Already processing: resent packet ignored.");
 		return TRUE;
 	}
 
@@ -379,7 +379,7 @@ static int nhrp_handle_registration_request(struct nhrp_packet *packet)
 		 * Indication. However, we do not have a direct peer entry
 		 * nor can we make sure that the lower layer is up, so
 		 * we just lamely drop the packet for now. */
-		nhrp_info("Too many pending requests: dropping this one");
+		nhrp_debug("Too many pending requests: dropping this one");
 		return TRUE;
 	}
 
@@ -470,7 +470,7 @@ static int nhrp_handle_purge_request(struct nhrp_packet *packet)
 	struct nhrp_cie *cie;
 	int flags, ret = TRUE;
 
-	nhrp_info("Received Purge Request from proto src %s to %s",
+	nhrp_debug("Received Purge Request from proto src %s to %s",
 		  nhrp_address_format(&packet->src_protocol_address,
 				      sizeof(tmp), tmp),
 		  nhrp_address_format(&packet->dst_protocol_address,
@@ -490,7 +490,7 @@ static int nhrp_handle_purge_request(struct nhrp_packet *packet)
 
 	payload = nhrp_packet_payload(packet, NHRP_PAYLOAD_TYPE_CIE_LIST);
 	list_for_each_entry(cie, &payload->u.cie_list, cie_list_entry) {
-		nhrp_info("Purge proto %s/%d nbma %s",
+		nhrp_debug("Purge proto %s/%d nbma %s",
 			nhrp_address_format(&cie->protocol_address,
 					    sizeof(tmp), tmp),
 			cie->hdr.prefix_length,
@@ -529,7 +529,7 @@ static int nhrp_handle_traffic_indication(struct nhrp_packet *packet)
 
 	/* Shortcuts enabled? */
 	if (packet->src_iface->flags & NHRP_INTERFACE_FLAG_SHORTCUT) {
-		nhrp_info("Traffic Indication from proto src %s; "
+		nhrp_debug("Traffic Indication from proto src %s; "
 			  "about packet to %s",
 			  nhrp_address_format(&packet->src_protocol_address,
 					      sizeof(tmp), tmp),
@@ -539,7 +539,7 @@ static int nhrp_handle_traffic_indication(struct nhrp_packet *packet)
 					     packet->hdr.afnum,
 					     &dst);
 	} else {
-		nhrp_info("Traffic Indication ignored from proto src %s; "
+		nhrp_debug("Traffic Indication ignored from proto src %s; "
 			  "about packet to %s",
 			  nhrp_address_format(&packet->src_protocol_address,
 					      sizeof(tmp), tmp),

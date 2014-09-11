@@ -153,7 +153,7 @@ static int netlink_receive(struct netlink_fd *fd, struct nlmsghdr *reply)
 				fd->dispatch[h->nlmsg_type] != NULL) {
 				fd->dispatch[h->nlmsg_type](h);
 			} else if (h->nlmsg_type != NLMSG_DONE) {
-				nhrp_info("Unknown NLmsg: 0x%08x, len %d",
+				nhrp_debug("Unknown NLmsg: 0x%08x, len %d",
 					  h->nlmsg_type, h->nlmsg_len);
 			}
 			h = NLMSG_NEXT(h, status);
@@ -459,11 +459,11 @@ static void netlink_link_new(struct nlmsghdr *msg)
 
 	if (((ifi->ifi_change & IFF_UP) || (iface->index == 0)) &&
 	    (ifi->ifi_flags & IFF_UP)) {
-		nhrp_info("Interface %s: configured UP, mtu=%d",
+		nhrp_debug("Interface %s: configured UP, mtu=%d",
 			  ifname, iface->mtu);
 		nhrp_interface_run_script(iface, "interface-up");
 	} else {
-		nhrp_info("Interface %s: config change, mtu=%d",
+		nhrp_debug("Interface %s: config change, mtu=%d",
 			  ifname, iface->mtu);
 	}
 
@@ -503,7 +503,7 @@ static void netlink_link_new(struct nlmsghdr *msg)
 				 * this works when there's only one GRE interface */
 				iface->link_index = 0;
 				nhrp_address_set_type(&iface->nbma_address, PF_UNSPEC);
-				nhrp_info("WARNING: Cannot figure out NBMA address for "
+				nhrp_debug("WARNING: Cannot figure out NBMA address for "
 					  "interface '%s'. Using route hints.", ifname);
 			}
 		}
@@ -534,7 +534,7 @@ static void netlink_link_new(struct nlmsghdr *msg)
 		sel.type_mask = NHRP_PEER_TYPEMASK_PURGEABLE;
 		sel.interface = iface;
 		nhrp_peer_foreach(nhrp_peer_purge_matching, &count, &sel);
-		nhrp_info("Interface %s: GRE configuration changed. Purged %d peers.",
+		nhrp_debug("Interface %s: GRE configuration changed. Purged %d peers.",
 			  ifname, count);
 	}
 }
@@ -555,7 +555,7 @@ static void netlink_link_del(struct nlmsghdr *msg)
 	if (iface == NULL)
 		return;
 
-	nhrp_info("Interface '%s' deleted", ifname);
+	nhrp_debug("Interface '%s' deleted", ifname);
 	iface->index = 0;
 	iface->link_index = 0;
 	nhrp_interface_hash(iface);

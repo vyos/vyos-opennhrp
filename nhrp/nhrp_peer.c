@@ -513,7 +513,7 @@ static void nhrp_peer_script_route_up_done(union nhrp_peer_event e, int revents)
 			holding_time_to_expiry_time(peer->expire_time - ev_now(), 10),
 			nhrp_peer_expire_cb);
 	} else {
-		nhrp_info("[%s] Route up script: %s; "
+		nhrp_debug("[%s] Route up script: %s; "
 			  "adding negative cached entry",
 			  nhrp_address_format(&peer->protocol_address,
 					      sizeof(tmp), tmp),
@@ -658,7 +658,7 @@ static void nhrp_peer_is_up(struct nhrp_peer *peer)
 
 	if (mcast) {
 		list_add(&peer->mcast_list_entry, &iface->mcast_list);
-		nhrp_info("[%s] Peer inserted to multicast list",
+		nhrp_debug("[%s] Peer inserted to multicast list",
 			   nhrp_address_format(&peer->protocol_address,
 					       sizeof(tmp), tmp));
 	}
@@ -762,7 +762,7 @@ static void nhrp_peer_address_query_cb(struct nhrp_address_query *query,
 	char host[64];
 
 	if (num_addr > 0) {
-		nhrp_info("Resolved '%s' as %s",
+		nhrp_debug("Resolved '%s' as %s",
 			  peer->nbma_hostname,
 			  nhrp_address_format(&addrs[0], sizeof(host), host));
 		peer->next_hop_address = addrs[0];
@@ -837,7 +837,7 @@ static void nhrp_peer_send_protocol_purge(struct nhrp_peer *peer)
 	payload = nhrp_packet_payload(packet, NHRP_PAYLOAD_TYPE_CIE_LIST);
 	nhrp_payload_add_cie(payload, cie);
 
-	nhrp_info("Sending Purge Request (of protocol address) to %s",
+	nhrp_debug("Sending Purge Request (of protocol address) to %s",
 		  nhrp_address_format(&peer->protocol_address,
 				      sizeof(tmp), tmp));
 
@@ -938,7 +938,7 @@ static void nhrp_peer_handle_registration_reply(void *ctx,
 	if (reply == NULL ||
 	    reply->hdr.type != NHRP_PACKET_REGISTRATION_REPLY) {
 		ec = reply ? reply->hdr.u.error.code : -1;
-		nhrp_info("Failed to register to %s: %s (%d)",
+		nhrp_debug("Failed to register to %s: %s (%d)",
 			  nhrp_address_format(&peer->protocol_address,
 					      sizeof(tmp), tmp),
 			  nhrp_error_indication_text(ec), ntohs(ec));
@@ -970,7 +970,7 @@ static void nhrp_peer_handle_registration_reply(void *ctx,
 			ec = cie->hdr.code;
 	}
 
-	nhrp_info("Received Registration Reply from %s: %s",
+	nhrp_debug("Received Registration Reply from %s: %s",
 		  nhrp_address_format(&peer->protocol_address,
 				      sizeof(tmp), tmp),
 		  nhrp_cie_code_text(ec));
@@ -995,7 +995,7 @@ static void nhrp_peer_handle_registration_reply(void *ctx,
 	if (payload != NULL) {
 		cie = nhrp_payload_get_cie(payload, 2);
 		if (cie != NULL) {
-			nhrp_info("NAT detected: our real NBMA address is %s",
+			nhrp_debug("NAT detected: our real NBMA address is %s",
 				  nhrp_address_format(&cie->nbma_address,
 						      sizeof(tmp), tmp));
 			peer->interface->nat_cie = *cie;
@@ -1034,7 +1034,7 @@ static void nhrp_peer_handle_registration_reply(void *ctx,
 				      NHRP_EXTENSION_FLAG_COMPULSORY,
 				      NHRP_PAYLOAD_TYPE_CIE_LIST);
 
-		nhrp_info("Sending Purge Request (of local routes) to %s",
+		nhrp_debug("Sending Purge Request (of local routes) to %s",
 			  nhrp_address_format(&peer->protocol_address,
 					      sizeof(tmp), tmp));
 
@@ -1141,7 +1141,7 @@ static void nhrp_peer_send_register_cb(struct ev_timer *w, int revents)
 					NHRP_PAYLOAD_TYPE_CIE_LIST);
 	nhrp_payload_add_cie(payload, cie);
 
-	nhrp_info("Sending Registration Request to %s (my mtu=%d)",
+	nhrp_debug("Sending Registration Request to %s (my mtu=%d)",
 		  nhrp_address_format(&peer->protocol_address,
 				      sizeof(dst), dst),
 		  peer->my_nbma_mtu);
@@ -1182,7 +1182,7 @@ static void nhrp_peer_handle_resolution_reply(void *ctx,
 	    reply->hdr.type != NHRP_PACKET_RESOLUTION_REPLY) {
 		ec = reply ? reply->hdr.u.error.code : -1;
 
-		nhrp_info("Failed to resolve %s: %s (%d)",
+		nhrp_debug("Failed to resolve %s: %s (%d)",
 			  nhrp_address_format(&peer->protocol_address,
 					      sizeof(tmp), tmp),
 			  nhrp_error_indication_text(ec), ntohs(ec));
@@ -1205,7 +1205,7 @@ static void nhrp_peer_handle_resolution_reply(void *ctx,
 	if (cie == NULL)
 		goto ret;
 
-	nhrp_info("Received Resolution Reply %s/%d is at proto %s nbma %s",
+	nhrp_debug("Received Resolution Reply %s/%d is at proto %s nbma %s",
 		  nhrp_address_format(&peer->protocol_address,
 				      sizeof(dst), dst),
 		  cie->hdr.prefix_length,
@@ -1223,7 +1223,7 @@ static void nhrp_peer_handle_resolution_reply(void *ctx,
 		natcie = list_next(&payload->u.cie_list, struct nhrp_cie, cie_list_entry);
 		if (natcie != NULL) {
 			natoacie = cie;
-			nhrp_info("NAT detected: really at proto %s nbma %s",
+			nhrp_debug("NAT detected: really at proto %s nbma %s",
 				nhrp_address_format(&natcie->protocol_address,
 					sizeof(tmp), tmp),
 				nhrp_address_format(&natcie->nbma_address,
@@ -1343,7 +1343,7 @@ static void nhrp_peer_send_resolve(struct nhrp_peer *peer)
 	payload = nhrp_packet_payload(packet, NHRP_PAYLOAD_TYPE_CIE_LIST);
 	nhrp_payload_add_cie(payload, cie);
 
-	nhrp_info("Sending Resolution Request to %s",
+	nhrp_debug("Sending Resolution Request to %s",
 		  nhrp_address_format(&peer->protocol_address,
 				      sizeof(dst), dst));
 
@@ -2096,7 +2096,7 @@ static int dump_peer(void *ctx, struct nhrp_peer *peer)
 	int *num_total = (int *) ctx;
 	char tmp[NHRP_PEER_FORMAT_LEN];
 
-	nhrp_info("%s %s",
+	nhrp_debug("%s %s",
 		  nhrp_peer_type[peer->type],
 		  nhrp_peer_format(peer, sizeof(tmp), tmp));
 	(*num_total)++;
@@ -2107,9 +2107,9 @@ void nhrp_peer_dump_cache(void)
 {
 	int num_total = 0;
 
-	nhrp_info("Peer cache dump:");
+	nhrp_debug("Peer cache dump:");
 	nhrp_peer_foreach(dump_peer, &num_total, NULL);
-	nhrp_info("Total %d peer cache entries, %d allocated entries",
+	nhrp_debug("Total %d peer cache entries, %d allocated entries",
 		  num_total, nhrp_peer_num_total);
 }
 
@@ -2121,7 +2121,7 @@ void nhrp_peer_cleanup(void)
 
 	while (nhrp_peer_num_total > 0) {
 		if (ev_now() > prev + 5.0) {
-			nhrp_info("Waiting for peers to die, %d left", nhrp_peer_num_total);
+			nhrp_debug("Waiting for peers to die, %d left", nhrp_peer_num_total);
 			prev = ev_now();
 		}
 		ev_loop(EVLOOP_ONESHOT);

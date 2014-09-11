@@ -236,7 +236,7 @@ static void install_filter_cb(struct ev_timer *w, int revents)
 		       &prog, sizeof(prog)))
 		nhrp_perror("Failed to install filter code");
 	else
-		nhrp_info("Filter code installed (%d opcodes)", f.numops);
+		nhrp_debug("Filter code installed (%d opcodes)", f.numops);
 
 	free(f.code);
 }

@@ -240,7 +240,7 @@ void nhrp_payload_add_cie(struct nhrp_payload *payload, struct nhrp_cie *cie)
 {
 	if (payload->payload_type != NHRP_PAYLOAD_TYPE_CIE_LIST) {
 		nhrp_cie_free(cie);
-		nhrp_info("Trying to add CIE payload to non-CIE payload %d\n",
+		nhrp_debug("Trying to add CIE payload to non-CIE payload %d\n",
 			  payload->payload_type);
 		return;
 	}
@@ -650,7 +650,7 @@ static int nhrp_packet_forward(struct nhrp_packet *packet)
 	char tmp[64], tmp2[64], tmp3[64];
 	struct nhrp_payload *p = NULL;
 
-	nhrp_info("Forwarding packet from nbma src %s, proto src %s to proto dst %s, hop count %d",
+	nhrp_debug("Forwarding packet from nbma src %s, proto src %s to proto dst %s, hop count %d",
 		nhrp_address_format(&packet->src_nbma_address,
 				    sizeof(tmp), tmp),
 		nhrp_address_format(&packet->src_protocol_address,
@@ -734,7 +734,7 @@ static int nhrp_packet_receive_local(struct nhrp_packet *packet)
 		}
 
 		/* Reply to unsent request? */
-		nhrp_info("Packet type %d from nbma src %s, proto src %s, "
+		nhrp_debug("Packet type %d from nbma src %s, proto src %s, "
 			  "proto dst %s dropped: no matching request",
 			  packet->hdr.type,
 			  nhrp_address_format(&packet->src_nbma_address,
@@ -750,7 +750,7 @@ static int nhrp_packet_receive_local(struct nhrp_packet *packet)
 	}
 
 	if (packet_types[packet->hdr.type].handler == NULL) {
-		nhrp_info("Packet type %d from nbma src %s, proto src %s, "
+		nhrp_debug("Packet type %d from nbma src %s, proto src %s, "
 			  "proto dst %s not supported",
 			  packet->hdr.type,
 			  nhrp_address_format(&packet->src_nbma_address,
@@ -1308,7 +1308,7 @@ int nhrp_packet_send_traffic(struct nhrp_interface *iface,
 			      NHRP_EXTENSION_FLAG_COMPULSORY,
 			      NHRP_PAYLOAD_TYPE_CIE_LIST);
 
-	nhrp_info("Sending Traffic Indication about packet from %s to %s (to %s/%s)",
+	nhrp_debug("Sending Traffic Indication about packet from %s to %s (to %s/%s)",
 		nhrp_address_format(protocol_src, sizeof(tmp1), tmp1),
 		nhrp_address_format(protocol_dst, sizeof(tmp2), tmp2),
 		nhrp_address_format(&peer->protocol_address, sizeof(tmp3), tmp3),
