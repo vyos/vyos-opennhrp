@@ -33,7 +33,7 @@ void nhrp_log(int level, const char *format, ...);
 			nhrp_log(NHRP_LOG_DEBUG, __VA_ARGS__);	\
 	} while(0)
 
-#define nhrp_debug(...) \
+#define nhrp_info(...) \
 		nhrp_log(NHRP_LOG_INFO, __VA_ARGS__)
 
 #define nhrp_error(...) \
