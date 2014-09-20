@@ -1,3 +1,9 @@
+vyos-opennhrp (0.14.1-1+vyos1+helium1) unstable; urgency=low
+
+  * VyOS import
+
+ -- Daniil Baturin <daniil@baturin.org>  Sat, 20 Sep 2014 07:35:15 +0200
+
 vyos-opennhrp (0.14.1-1+vyos1) precise; urgency=low
 
   * Rename package name
