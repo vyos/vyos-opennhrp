@@ -1,3 +1,9 @@
+vyos-opennhrp (0.14.1-1+vyos2+lithium1) unstable; urgency=low
+
+  * New branch
+
+ -- Alex Harpin <development@landsofshadow.co.uk>  Mon, 08 Dec 2014 14:52:36 +0000
+ 
 vyos-opennhrp (0.14.1-1+vyos1+helium2) unstable; urgency=low
 
   * Force release
