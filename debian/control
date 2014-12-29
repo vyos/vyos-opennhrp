@@ -11,5 +11,7 @@ Homepage: http://sourceforge.net/projects/opennhrp/
 Package: vyos-opennhrp
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Description: VyOS OpenNHRP package
+ OpenNHRP implements NBMA Next Hop Resolution Protocol (as defined in
+ RFC 2332). It makes it possible to create dynamic multipoint VPN Linux
+ router using NHRP, GRE and IPsec. It aims to be Cisco DMVPN compatible
