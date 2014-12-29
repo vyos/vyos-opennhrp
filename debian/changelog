@@ -1,3 +1,11 @@
+vyos-opennhrp (0.14.1-1+vyos2+lithium2) unstable; urgency=low
+
+  [ Alex Harpin ]
+  * Update package maintainer
+  * Add package description
+
+ -- Alex Harpin <development@landsofshadow.co.uk>  Mon, 29 Dec 2014 09:23:37 +0000
+ 
 vyos-opennhrp (0.14.1-1+vyos2+lithium1) unstable; urgency=low
 
   * New branch
