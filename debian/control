@@ -1,7 +1,7 @@
 Source: vyos-opennhrp
 Section: unknown
 Priority: extra
-Maintainer: Mark Bryars <debian@darkskiez.co.uk>
+Maintainer: VyOS Package Maintainers <maintainers@vyos.net>
 Build-Depends: debhelper (>= 8.0.0), libc-ares-dev, pkg-config
 Standards-Version: 3.9.1
 Homepage: http://sourceforge.net/projects/opennhrp/
