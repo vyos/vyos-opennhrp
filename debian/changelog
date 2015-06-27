@@ -1,3 +1,10 @@
+vyos-opennhrp (0.14.1-1+vyos2+lithium3) unstable; urgency=low
+
+  [ Alex Harpin ]
+  * vyos-opennhrp: add dh_gencontrol to enable development builds
+
+ -- Alex Harpin <development@landsofshadow.co.uk>  Sat, 27 Jun 2015 18:21:53 +0100
+ 
 vyos-opennhrp (0.14.1-1+vyos2+lithium2) unstable; urgency=low
 
   [ Alex Harpin ]
