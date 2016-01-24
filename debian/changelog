@@ -1,3 +1,12 @@
+vyos-opennhrp (0.14.1-1+vyos2+current1) unstable; urgency=medium
+
+  [ Thomas Jepp ]
+  * Remove debian/source/format to stop breakage with pdebuild
+
+  [ Kim Hagen ]
+
+ -- Kim Hagen <kim.sidney@gmail.com>  Sun, 24 Jan 2016 15:34:55 -0500
+
 vyos-opennhrp (0.14.1-1+vyos2+lithium3) unstable; urgency=low
 
   [ Alex Harpin ]
