@@ -24,8 +24,7 @@ peer-up)
 	echo "Create link from $NHRP_SRCADDR ($NHRP_SRCNBMA) to $NHRP_DESTADDR ($NHRP_DESTNBMA)"
 	if [[ ( ${_type} == "spoke" ) && ( -e ${_strongswan_pid} ) ]]; then
 		if grep "${NHRP_SRCADDR}" "${_nhrp_ipsec}"; then
-			_ccon=`ipsec stroke status | grep -E 'vpnprof-dmvpn.*$NHRP_SRCNBMA.*$NHRP_DESTNBMA' | cut -d'[' -f 2 | cut -d']' -f 1`
-			swanctl -t -I $_ccon /dev/null 2>&1
+			swanctl -t -S $NHRP_SRCNBMA -R $NHRP_DESTNBMA /dev/null 2>&1
 			swanctl -i -c dmvpn -S $NHRP_SRCNBMA -R $NHRP_DESTNBMA || exit 1
 		fi
 	fi
@@ -33,8 +32,7 @@ peer-up)
 peer-down)
 	echo "Delete link from $NHRP_SRCADDR ($NHRP_SRCNBMA) to $NHRP_DESTADDR ($NHRP_DESTNBMA)"
 	if [[ ( ${_type} == "spoke" ) && ( -e ${_strongswan_pid} ) ]]; then
-		_ccon=`ipsec stroke status | grep -E 'vpnprof-dmvpn.*$NHRP_SRCNBMA.*$NHRP_DESTNBMA' | cut -d'[' -f 2 | cut -d']' -f 1`
-		swanctl -t -I $_ccon || exit 1
+		swanctl -t -S $NHRP_SRCNBMA -R $NHRP_DESTNBMA || exit 1
 	fi
 	ip route del $NHRP_DESTNBMA src $NHRP_SRCNBMA proto 42
 	;;
