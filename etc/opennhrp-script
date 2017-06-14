@@ -47,7 +47,7 @@ peer-up)
 		fi
 		if grep "${NHRP_SRCADDR}" "${_nhrp_ipsec}"; then
 			ipsec whack --delete --name $_connection > /dev/null 2>&1
-			ipsec whack --name $_connection --host $NHRP_SRCNBMA --clientprotoport gre --to --host $NHRP_DESTNBMA --clientprotoport gre --psk $_pfs --encrypt $_ipsec_args || exit 1
+			ipsec whack --name $_connection --host $NHRP_SRCNBMA --clientprotoport gre --to --host $NHRP_DESTNBMA --client $NHRP_SRCNBMA/32 --clientprotoport gre --psk $_pfs --encrypt $_ipsec_args || exit 1
 			ipsec up $_connection || exit 1
 		fi
 	fi
