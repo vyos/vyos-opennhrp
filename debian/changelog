@@ -1,3 +1,9 @@
+vyos-opennhrp (0.14.1-1+vyos3+equuleus1) unstable; urgency=medium
+
+  * New branch.
+
+ -- Daniil Baturin <daniil@baturin.org>  Tue, 23 Jul 2019 03:25:00 -0400
+
 vyos-opennhrp (0.14.1-1+vyos2+current1) unstable; urgency=medium
 
   [ Thomas Jepp ]
