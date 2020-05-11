@@ -4,6 +4,7 @@ _nhrp_config="/etc/opennhrp/opennhrp.conf"
 _nhrp_ipsec="/etc/opennhrp/opennhrp.ipsec"
 _strongswan_pid="/var/run/charon.pid"
 _type="hub"
+_script_name="opennhrp"
 
 if ! grep "$NHRP_INTERFACE" $_nhrp_config | grep "hub"> /dev/null 2>&1; then
 	_type="spoke"
@@ -11,38 +12,42 @@ fi
 
 case $1 in
 interface-up)
+	logger -t ${_script_name} -p local7.notice "Flush route table proto 42 and neighbours on interface $NHRP_INTERFACE"
 	ip route flush proto 42 dev $NHRP_INTERFACE
 	ip neigh flush dev $NHRP_INTERFACE
 	;;
 peer-register)
+	logger -t ${_script_name} -p local7.notice "Received peer registration request: $NHRP_SRCNBMA $NHRP_DESTNBMA"
 	;;
 peer-up)
 	if [ -n "$NHRP_DESTMTU" ]; then
 		ARGS=`ip route get $NHRP_DESTNBMA from $NHRP_SRCNBMA | head -1`
 		ip route add $ARGS proto 42 mtu $NHRP_DESTMTU
+		logger -t ${_script_name} -p local7.notice "ip route add $ARGS proto 42 mtu $NHRP_DESTMTU"
 	fi
-	echo "Create link from $NHRP_SRCADDR ($NHRP_SRCNBMA) to $NHRP_DESTADDR ($NHRP_DESTNBMA)"
+	logger -t ${_script_name} -p local7.notice "Create link from $NHRP_SRCADDR ($NHRP_SRCNBMA) to $NHRP_DESTADDR ($NHRP_DESTNBMA)"
 	if [[ ( ${_type} == "spoke" ) && ( -e ${_strongswan_pid} ) ]]; then
 		if grep "${NHRP_SRCADDR}" "${_nhrp_ipsec}"; then
 			swanctl -t -S $NHRP_SRCNBMA -R $NHRP_DESTNBMA > /dev/null 2>&1
+			logger -t ${_script_name} -p local7.notice "IPSec: connect to $NHRP_SRCADDR ($NHRP_SRCNBMA)"
 			swanctl -i -c dmvpn -S $NHRP_SRCNBMA -R $NHRP_DESTNBMA || exit 1
 		fi
 	fi
 	;;
 peer-down)
-	echo "Delete link from $NHRP_SRCADDR ($NHRP_SRCNBMA) to $NHRP_DESTADDR ($NHRP_DESTNBMA)"
+	logger -t ${_script_name} -p local7.notice "Delete link from $NHRP_SRCADDR ($NHRP_SRCNBMA) to $NHRP_DESTADDR ($NHRP_DESTNBMA)"
 	if [[ ( ${_type} == "spoke" ) && ( -e ${_strongswan_pid} ) ]]; then
 		swanctl -t -S $NHRP_SRCNBMA -R $NHRP_DESTNBMA || exit 1
 	fi
 	ip route del $NHRP_DESTNBMA src $NHRP_SRCNBMA proto 42
 	;;
 route-up)
-	echo "Route $NHRP_DESTADDR/$NHRP_DESTPREFIX is up"
+	logger -t ${_script_name} -p local7.notice "Route $NHRP_DESTADDR/$NHRP_DESTPREFIX is up"
 	ip route replace $NHRP_DESTADDR/$NHRP_DESTPREFIX proto 42 via $NHRP_NEXTHOP dev $NHRP_INTERFACE
 	ip route flush cache
 	;;
 route-down)
-	echo "Route $NHRP_DESTADDR/$NHRP_DESTPREFIX is down"
+	logger -t ${_script_name} -p local7.notice "Route $NHRP_DESTADDR/$NHRP_DESTPREFIX is down"
 	ip route del $NHRP_DESTADDR/$NHRP_DESTPREFIX proto 42
 	ip route flush cache
 	;;

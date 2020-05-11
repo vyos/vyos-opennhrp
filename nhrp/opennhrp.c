@@ -473,8 +473,6 @@ int main(int argc, char **argv)
 	}
 
 	srandom(time(NULL));
-	if (!log_init())
-		return 1;
 	if (!open_pid_file())
 		return 1;
 
@@ -498,6 +496,9 @@ int main(int argc, char **argv)
 		nhrp_error("Failed to daemonize. Exit.");
 		return 8;
 	}
+
+	if (!log_init())
+                return 1;
 
 	write_pid();
 
