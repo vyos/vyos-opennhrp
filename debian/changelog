@@ -1,3 +1,9 @@
+vyos-opennhrp (0.14.1-vyos1.3) unstable; urgency=medium
+
+  * New LTS branch.
+
+ -- Daniil Baturin <daniil@vyos.io>  Mon, 04 Jan 2021 17:46:29 +0200
+
 vyos-opennhrp (0.14.1-1+vyos3+equuleus1) unstable; urgency=medium
 
   * New branch.
